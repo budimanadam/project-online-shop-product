@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h2>Product Detail</h2>
+
+<div class="row">
+    {{#each data}}
+        <div class="column">
+            <div class="card">
+                <img src="/pictures/{{image}}" alt="Product image" width="25%" height="25%">
+                <h3>{{dispengnm}}</h3>
+                <p>{{dispnm}}</p>
+            </div>
+        </div>
+        <div>
+            <form>
+                <table>
+                    <tr>
+                        <td colspan="2">Edit Product</td>
+                    </tr>
+                    <input id="dispno" name="dispno" type="hidden" value="{{dispno}}"/>
+                    <tr>
+                        <th>Display Name </th>
+                        <td><input id="dispengnm" name="dispengnm" type="text" value="{{dispengnm}}" required/></td>
+                    </tr>
+                    <tr>
+                        <th>Nama Ditampilkan </th>
+                        <td><input id="dispnm" name="dispnm" type="text" value="{{dispnm}}" required/></td>
+                    </tr>
+                    <tr>
+                        <th>Stock </th>
+                        <td><input id="stock" name="stock" type="number" value="{{stock}}" required/></td>
+                    </tr>
+                    <tr>
+                        <th>Price </th>
+                        <td><input id="price" name="price" type="number" value="{{price}}" required/></td>
+                    </tr>
+                    <tr>
+                        <th>Description </th>
+                        <td><textarea id="description" name="description" type="text" required>{{description}}</textarea></td>
+                    </tr>
+                    <tr>
+                        <th>Select File </th>
+                        <td><input id="image" name="image" type="file" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" value="Submit"/> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button onclick="deleteProduct({{dispno}})"> Delete </button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    {{/each}}
+</div>
+
+</body>
+</html>
+<script>
+    
+    // Funtion to execute the submit button
+    $("form").submit(function(evt) {
+       evt.preventDefault();
+       var formData = new FormData($(this)[0]);
+       
+        $.ajax({
+            url: '/products/' + document.getElementById("dispno").value,
+            type: 'PUT',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function (response) {
+                location.reload();
+            }
+        });
+        return false;
+    });
+
+    // Function to execute the delete button
+    function deleteProduct(id) {
+        $.ajax({
+            url: '/products/' + id,
+            type: 'DELETE',
+            success: function(data) {
+                alert('Product deleted')
+                window.location='/'
+            }
+        });
+    }
+ </script>
