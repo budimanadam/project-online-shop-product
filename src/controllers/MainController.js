@@ -38,7 +38,7 @@ var getById = async (req, h) => {
 
 // Function to PUT product by id (dispno)
 var putById = async (req, h) => {
-    try {       
+    try {
         var queryUpdateImage = ``;
         if (Object.keys(req.payload.image).length !== 0) {
             var imageName = req.payload.dispengnm.replace(' ', '') + '-' + Math.floor(Date.now() / 1000) + '.jpg'

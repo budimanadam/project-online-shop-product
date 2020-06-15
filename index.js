@@ -18,7 +18,7 @@ const init = async () => {
       host: 'localhost',
       routes: {
         files: {
-          relativeTo: Path.join(__dirname, 'src/images')
+          relativeTo: Path.join(__dirname, 'src/')
         }
       }
   });
@@ -82,10 +82,17 @@ const init = async () => {
       method: 'GET',
       path: '/pictures/{image}',
       handler: function (request, h) {
-
-          return h.file(request.params.image);
+          return h.file('images/' + request.params.image);
       }
     });
+
+    server.route({  
+      method: 'GET',
+      path: '/css/{css}',
+      handler: function (request, reply) {
+        return reply.file('css/' + request.params.css)
+      }
+    })
 
     server.route([
       { 
